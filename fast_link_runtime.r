@@ -7,7 +7,6 @@ dataSet <- read.csv("data/clean_county.csv", header=TRUE)
 dataSet <- dataSet[linkageFields]
 
 x <- c(5000)
-
 for (size in x) {
   sampleSize <- size
   sampleSize <- as.integer(sampleSize) * 1.5

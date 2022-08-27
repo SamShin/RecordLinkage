@@ -7,7 +7,6 @@ linkageFields <- c("first_name", "middle_name", "last_name", "res_street_address
 dataSet <- dataSet[linkageFields]
 
 x <- c(5000)
-
 for (size in x) {
   sampleSize <- size
   sampleSize <- as.integer(sampleSize) * 1.5
@@ -45,6 +44,7 @@ for (size in x) {
   rPairsClassify <- emClassify(rpairs = rPairsWeights,
                                threshold.upper = 11)
 
+  print(summary(rPairsClassify))
   print(paste("[",as.character(size),"]",  sep = ""))
   toc()
 }
