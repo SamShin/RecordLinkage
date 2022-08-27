@@ -1,9 +1,9 @@
 library(fastLink)
 library(tictoc)
 
-linkageFields <- c("first_name", "middle_name", "last_name", "res_street_address")
-
 dataSet <- read.csv("data/clean_county.csv", header=TRUE)
+
+linkageFields <- c("first_name", "middle_name", "last_name", "res_street_address")
 dataSet <- dataSet[linkageFields]
 
 x <- c(5000)
