@@ -5,7 +5,7 @@ import rl_helper
 
 recordlinkage.logging.set_verbosity(recordlinkage.logging.ERROR)
 
-rl = rl_helper.Data(file_name= "county.csv", columns=["first_name", "middle_name", "last_name", "res_street_address", "zip_code"])
+rl = rl_helper.Data(file_name="data/clean_county.csv", columns=["first_name", "middle_name", "last_name", "res_street_address", "zip_code"])
 
 x = [5000]
 for size in x:

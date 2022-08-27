@@ -1,48 +1,45 @@
 library(fastLink)
 library(tictoc)
 
-nameFields <- c("first_name", "middle_name", "last_name")
+linkageFields <- c("first_name", "middle_name", "last_name", "res_street_address")
 
-dataSet <- read.table("county.txt", header = TRUE)
-dataSet <- dataSet[nameFields]
+dataSet <- read.csv("data/clean_county.csv", header=TRUE)
+dataSet <- dataSet[linkageFields]
 
-x <- c(100,1000)
+x <- c(5000)
 
 for (size in x) {
   sampleSize <- size
   sampleSize <- as.integer(sampleSize) * 1.5
   sampleCutA <- sampleSize / 3
-  
+
   sampleSet <- dataSet
   sampleSet <- sampleSet[sample(nrow(sampleSet), sampleSize), ]
-  
+
   for (name in colnames(sampleSet)) {
     sampleSet[[name]][sample(nrow(sampleSet), sampleSize * 0.1)] <- NA
   }
-  
+
   dfAFirstHalf <- sampleSet[1:sampleCutA, ]
   dfBFirstHalf <- sampleSet[1:sampleCutA, ]
-  
+
   dfASecondHalf <- sampleSet[(sampleCutA + 1):(2 * sampleCutA), ]
   dfBSecondHalf <- tail(sampleSet, n = sampleCutA)
-  
+
   dfA <- rbind(dfAFirstHalf, dfASecondHalf)
   dfB <- rbind(dfBFirstHalf, dfBSecondHalf)
-  
-  
-  linkageFields <- nameFields
-  stringDistFields <- nameFields
-  partialMatchFields <-nameFields
-  
+
   tic("FastLink")
-  
-  rPairsFL <- fastLink(dfA = dfA, dfB = dfB,
+
+  rPairsFL <- fastLink(dfA = dfA,
+                       dfB = dfB,
                        varnames = linkageFields,
-                       stringdist.match = stringDistFields,
-                       partial.match = partialMatchFields,
-                       return.all = TRUE)
-  
-  print(confusion(rPairsFL))
+                       stringdist.match = linkageFields,
+                       stringdist.method = "lv",
+                       n.cores = 6,
+                       return.all = FALSE)
+
+  print(summary(rPairsFL))
   print(paste("[",as.character(size),"]", " ---------------------------",  sep = ""))
   toc()
 }
