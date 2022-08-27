@@ -4,11 +4,11 @@ import logging
 import time
 import rl_helper
 
-logs = ["splink.estimate_u", "splink.expectation_maximisation", "splink.settings", "splink.em_training_session"]
+logs = ["splink.estimate_u", "splink.expectation_maximisation", "splink.settings", "splink.em_training_session", "comparison_level"]
 for log in logs:
     logging.getLogger(log).setLevel(logging.ERROR)
 
-rl = rl_helper.Data(file_name = "county.csv", columns=["first_name", "middle_name", "last_name", "res_street_address", "zip_code"], unique_col=True)
+rl = rl_helper.Data(file_name="data/clean_county.csv", columns=["first_name", "middle_name", "last_name", "res_street_address", "zip_code"], unique_col=True)
 
 settings = {
     "link_type": "link_only",
