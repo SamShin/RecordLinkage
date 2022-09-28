@@ -19,9 +19,9 @@ class Data:
 
         self.df = pd.DataFrame(data)
         self.df = self.df[columns]
+        self.unique_col = unique_col
 
         if unique_col == True:
-            self.unique_col = unique_col
             unique_id = self.df.copy(deep=True)
             unique_id = unique_id.groupby(columns).ngroup()
             self.df['unique_id'] = unique_id
