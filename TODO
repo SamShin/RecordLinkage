@@ -1,5 +1,1 @@
-I am not sure how the file path is going to look like in hyak, so see if that needs to change.
-Currently the output files are stored under /results but since I have to create a image in hyak, I am not sure
-if I can write to the image so look at the file paths.
-
-Also check if the elements in the params are correct types
+Try to use blocking and many parameters for splink
