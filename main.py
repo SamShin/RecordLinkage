@@ -1,6 +1,6 @@
-import copy
-
 import package.package as packages
+
+import copy
 from rpy2 import robjects as r
 import sys
 
@@ -37,22 +37,18 @@ def main():
     package = packages.Packages()
 
     for i, pack in enumerate(params[0]):
-        #print(params)
-
         params_copy = copy.deepcopy(params)
-        print(params is params_copy)
+        
         if pack.lower() == "python_recordlinkage":
             package.python_recordlinkage(*params_copy[1:5], params_copy[5][i], params_copy[6][i])
 
         elif pack.lower() == "python_splink":
-            print(params)
             package.python_splink(*params_copy[1:5], params_copy[6][i])
-            print(params)
+
         elif pack.lower() == "r_recordlinkage":
             r.r['r_recordLinkage'](*params_copy[1:5], params_copy[6][i])
 
         elif pack.lower() == "r_fastlink":
-
             r.r['r_fastlink'](*params_copy[1:5], params_copy[5][i], params_copy[6][i])
 
 
