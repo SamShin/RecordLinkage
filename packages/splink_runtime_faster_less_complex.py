@@ -29,11 +29,11 @@ settings = {
     "link_type": "link_only",
     "unique_id_column_name": "id",
     "comparisons": [
-        cl.jaro_winkler_at_thresholds(col_name="first_name", distance_threshold_or_thresholds=0.9, term_frequency_adjustments=True),
-        cl.jaro_winkler_at_thresholds(col_name="last_name", distance_threshold_or_thresholds=0.9, term_frequency_adjustments=True),
-        cl.jaro_winkler_at_thresholds(col_name="middle_name", distance_threshold_or_thresholds=0.9, term_frequency_adjustments=True),
-        cl.levenshtein_at_thresholds(col_name="res_street_address", distance_threshold_or_thresholds=[1,3,5], term_frequency_adjustments=False),
-        cl.levenshtein_at_thresholds(col_name="birth_year", distance_threshold_or_thresholds=1, term_frequency_adjustments=True)
+        cl.exact_match(col_name="first_name",  term_frequency_adjustments=False),
+        cl.exact_match(col_name="last_name",  term_frequency_adjustments=False),
+        cl.exact_match(col_name="middle_name",  term_frequency_adjustments=False),
+        cl.exact_match(col_name="res_street_address", term_frequency_adjustments=False),
+        cl.exact_match(col_name="birth_year", term_frequency_adjustments=False)
     ],
     #Blocking used here
     "blocking_rules_to_generate_predictions": blocking_rules_for_prediction,
@@ -79,7 +79,7 @@ for size in x:
     precision = true_positive / (true_positive + false_positive)
     recall = true_positive / (true_positive + false_negative)
 
-    with open(os.path.join(results_folder, "splink_outputs_complex_model.txt"), "a") as f:
+    with open(os.path.join(results_folder, "splink_outputs_simple_model.txt"), "a") as f:
         f.writelines(
             "Sample Size: " + str(size) +
             "|Links Predicted: " + str(len(df_predict)) +
