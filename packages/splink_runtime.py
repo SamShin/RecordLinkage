@@ -6,9 +6,9 @@ import pandas as pd
 from  pathlib import Path
 import os
 
-# logs = ["splink.estimate_u", "splink.expectation_maximisation", "splink.settings", "splink.em_training_session", "comparison_level"]
-# for log in logs:
-#     logging.getLogger(log).setLevel(logging.ERROR)
+logs = ["splink.estimate_u", "splink.expectation_maximisation", "splink.settings", "splink.em_training_session", "comparison_level"]
+for log in logs:
+    logging.getLogger(log).setLevel(logging.ERROR)
 
 
 root_folder = Path(__file__).parents[1]
@@ -43,7 +43,7 @@ settings = {
 }
 
 x = [2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000,32000,34000,36000,38000,40000]
-x = [40000]
+
 for size in x:
 
     dfA = pd.read_csv(os.path.join(df_folder, str(size) + "_dfA.csv"), names = columns)
@@ -90,7 +90,7 @@ for size in x:
             "\n"
         )
 
-# A few diagnostics
+# A few diagnostics to take a look at the quality of the model:
 # linker.match_weights_chart()
 
 # false_positives = linker.prediction_errors_from_labels_column("id", include_false_negatives=False, include_false_positives=True).as_pandas_dataframe(limit=10)
