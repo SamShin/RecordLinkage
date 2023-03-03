@@ -43,7 +43,6 @@ settings = {
 }
 
 x = [2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000,32000,34000,36000,38000,40000]
-
 for size in x:
 
     dfA = pd.read_csv(os.path.join(df_folder, str(size) + "_dfA.csv"), names = columns)
@@ -68,29 +67,30 @@ for size in x:
 
     time_end = time.time()
 
-    df_predict = predict.as_pandas_dataframe()
-    pairs_data = linker.cumulative_comparisons_from_blocking_rules_records(blocking_rules_for_prediction)
-    pairs = sum([r['row_count'] for r in pairs_data])
+    # df_predict = predict.as_pandas_dataframe()
+    # pairs_data = linker.cumulative_comparisons_from_blocking_rules_records(blocking_rules_for_prediction)
+    # pairs = sum([r['row_count'] for r in pairs_data])
 
-    false_positive = len(df_predict.loc[df_predict["id_l"] != df_predict["id_r"]])
-    true_positive = len(df_predict.loc[df_predict["id_l"] == df_predict["id_r"]])
-    false_negative = round(size / 2) - true_positive
+    # false_positive = len(df_predict.loc[df_predict["id_l"] != df_predict["id_r"]])
+    # true_positive = len(df_predict.loc[df_predict["id_l"] == df_predict["id_r"]])
+    # false_negative = round(size / 2) - true_positive
 
-    precision = true_positive / (true_positive + false_positive)
-    recall = true_positive / (true_positive + false_negative)
+    # precision = true_positive / (true_positive + false_positive)
+    # recall = true_positive / (true_positive + false_negative)
 
-    with open(os.path.join(results_folder, "splink_outputs_complex_model.txt"), "a") as f:
-        f.writelines(
-            "Sample Size: " + str(size) +
-            "|Links Predicted: " + str(len(df_predict)) +
-            "|Time Taken: " + str(round((time_end - time_start),2)) +
-            "|Precision: " + str(precision) +
-            "|Recall: " + str(recall) +
-            "|Linkage Pairs: " + str(pairs) +
-            "\n"
-        )
+    # with open(os.path.join(results_folder, "splink_outputs_complex_model.txt"), "a") as f:
+    #     f.writelines(
+    #         "Sample Size: " + str(size) +
+    #         "|Links Predicted: " + str(len(df_predict)) +
+    #         "|Time Taken: " + str(round((time_end - time_start),2)) +
+    #         "|Precision: " + str(precision) +
+    #         "|Recall: " + str(recall) +
+    #         "|Linkage Pairs: " + str(pairs) +
+    #         "\n"
+    #     )
 
 # A few diagnostics to take a look at the quality of the model:
+# linker.roc_chart_from_labels_column("id")
 # linker.match_weights_chart()
 
 # false_positives = linker.prediction_errors_from_labels_column("id", include_false_negatives=False, include_false_positives=True).as_pandas_dataframe(limit=10)

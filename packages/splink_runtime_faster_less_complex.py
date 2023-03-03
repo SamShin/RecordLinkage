@@ -43,7 +43,6 @@ settings = {
 }
 
 x = [2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000,32000,34000,36000,38000,40000]
-x = [40000]
 for size in x:
 
     dfA = pd.read_csv(os.path.join(df_folder, str(size) + "_dfA.csv"), names = columns)
@@ -92,6 +91,7 @@ for size in x:
 
 # A few diagnostics
 # linker.match_weights_chart()
+linker.roc_chart_from_labels_column("id")
 
 # false_positives = linker.prediction_errors_from_labels_column("id", include_false_negatives=False, include_false_positives=True).as_pandas_dataframe(limit=10)
 # false_negatives = linker.prediction_errors_from_labels_column("id", include_false_negatives=True, include_false_positives=False).as_pandas_dataframe(limit=10)
