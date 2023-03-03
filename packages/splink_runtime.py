@@ -22,7 +22,8 @@ blocking_rules_for_prediction = [
         "l.first_name = r.first_name and l.middle_name = r.middle_name",
         "l.res_street_address = r.res_street_address",
         "l.birth_year = r.birth_year and l.middle_name = r.middle_name",
-        "l.birth_year = r.birth_year and l.last_name = r.last_name"
+        "l.birth_year = r.birth_year and l.last_name = r.last_name",
+        "l.birth_year = r.birth_year and l.first_name = r.first_name"
 ]
 
 settings = {
@@ -53,7 +54,8 @@ for size in x:
     linker = DuckDBLinker([dfA, dfB], settings)
 
     linker.estimate_probability_two_random_records_match(["l.first_name = r.first_name and l.last_name = r.last_name and l.birth_year = r.birth_year",
-                                                          "l.birth_year = r.birth_year and l.res_street_address = r.res_street_address"], recall=0.8)
+                                                          "l.birth_year = r.birth_year and l.res_street_address = r.res_street_address",
+                                                          "l.first_name = r.first_name and l.middle_name = r.middle_name and l.last_name = r.last_name"], recall=0.8)
     linker.estimate_u_using_random_sampling(target_rows=1e6)
 
     training = [
@@ -63,31 +65,31 @@ for size in x:
 
     for i in training:
         linker.estimate_parameters_using_expectation_maximisation(i)
-    predict = linker.predict(0.85) #Has None as a dafault value, thus 0.95 was needed for any analysis
+    predict = linker.predict(0.5) # This should be 0.5 for your accuracy derivations to be correct
 
     time_end = time.time()
 
-    # df_predict = predict.as_pandas_dataframe()
-    # pairs_data = linker.cumulative_comparisons_from_blocking_rules_records(blocking_rules_for_prediction)
-    # pairs = sum([r['row_count'] for r in pairs_data])
+    df_predict = predict.as_pandas_dataframe()
+    pairs_data = linker.cumulative_comparisons_from_blocking_rules_records(blocking_rules_for_prediction)
+    pairs = sum([r['row_count'] for r in pairs_data])
 
-    # false_positive = len(df_predict.loc[df_predict["id_l"] != df_predict["id_r"]])
-    # true_positive = len(df_predict.loc[df_predict["id_l"] == df_predict["id_r"]])
-    # false_negative = round(size / 2) - true_positive
+    false_positive = len(df_predict.loc[df_predict["id_l"] != df_predict["id_r"]])
+    true_positive = len(df_predict.loc[df_predict["id_l"] == df_predict["id_r"]])
+    false_negative = round(size / 2) - true_positive
 
-    # precision = true_positive / (true_positive + false_positive)
-    # recall = true_positive / (true_positive + false_negative)
+    precision = true_positive / (true_positive + false_positive)
+    recall = true_positive / (true_positive + false_negative)
 
-    # with open(os.path.join(results_folder, "splink_outputs_complex_model.txt"), "a") as f:
-    #     f.writelines(
-    #         "Sample Size: " + str(size) +
-    #         "|Links Predicted: " + str(len(df_predict)) +
-    #         "|Time Taken: " + str(round((time_end - time_start),2)) +
-    #         "|Precision: " + str(precision) +
-    #         "|Recall: " + str(recall) +
-    #         "|Linkage Pairs: " + str(pairs) +
-    #         "\n"
-    #     )
+    with open(os.path.join(results_folder, "splink_outputs_complex_model.txt"), "a") as f:
+        f.writelines(
+            "Sample Size: " + str(size) +
+            "|Links Predicted: " + str(len(df_predict)) +
+            "|Time Taken: " + str(round((time_end - time_start),2)) +
+            "|Precision: " + str(precision) +
+            "|Recall: " + str(recall) +
+            "|Linkage Pairs: " + str(pairs) +
+            "\n"
+        )
 
 # A few diagnostics to take a look at the quality of the model:
 # linker.roc_chart_from_labels_column("id")

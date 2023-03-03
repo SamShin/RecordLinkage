@@ -63,7 +63,7 @@ for size in x:
 
     for i in training:
         linker.estimate_parameters_using_expectation_maximisation(i)
-    predict = linker.predict(0.85) #Has None as a dafault value, thus 0.95 was needed for any analysis
+     predict = linker.predict(0.5) # This should be 0.5 for your accuracy derivations to be correct
 
     time_end = time.time()
 
