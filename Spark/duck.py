@@ -27,43 +27,49 @@ settings = {
     ]
 }
 
-dfA = pd.read.csv("20000_dfA.csv", header = True)
-dfB = pd.read_csv("20000_dfB.csv", names = True)
+path = "/mmfs1/home/seunguk/apptainer/test_files/test_df/"
+#lst = [2000]
+lst = [30000,40000]
+for x in lst:
+    print(x)
+    dfA = pd.read_csv(path + str(x) + "_dfA.csv", header = 0)
+    dfB = pd.read_csv(path + str(x) + "_dfB.csv", header = 0)
 
-time_start = time.time()
+    time_start = time.time()
 
-linker = DuckDBLinker([dfA, dfB], settings)
-linker.estimate_u_using_random_sampling(target_rows=1e6)
-training = ["l.first_name = r.first_name",
-            "l.middle_name = r.middle_name",
-            "l.last_name = r.last_name",
-            "l.res_street_address = r.res_street_address",
-            "l.birth_year = r.birth_year"
-            ]
+    linker = DuckDBLinker([dfA, dfB], settings)
 
-for i in training:
-    linker.estimate_parameters_using_expectation_maximisation(i)
-predict = linker.predict(0.95) #Has None as a dafault value, thus 0.95 was needed for any analysis
+    linker.estimate_u_using_random_sampling(target_rows=1e6)
+    training = ["l.first_name = r.first_name",
+                "l.middle_name = r.middle_name",
+                "l.last_name = r.last_name",
+                "l.res_street_address = r.res_street_address",
+                "l.birth_year = r.birth_year"
+                ]
 
-time_end = time.time()
+    for i in training:
+        linker.estimate_parameters_using_expectation_maximisation(i)
+    predict = linker.predict(0.95) #Has None as a dafault value, thus 0.95 was needed for any analysis
 
-df_predict = predict.as_pandas_dataframe()
-pairs = linker.count_num_comparisons_from_blocking_rule("l.zip_code = r.zip_code")
+    time_end = time.time()
 
-false_positive = len(df_predict.loc[df_predict["id_l"] != df_predict["id_r"]])
-true_positive = len(df_predict.loc[df_predict["id_l"] == df_predict["id_r"]])
-false_negative = round(20000 / 2) - true_positive
+    df_predict = predict.as_pandas_dataframe()
+    pairs = linker.count_num_comparisons_from_blocking_rule("l.zip_code = r.zip_code")
 
-precision = true_positive / (true_positive + false_positive)
-recall = true_positive / (true_positive + false_negative)
+    false_positive = len(df_predict.loc[df_predict["id_l"] != df_predict["id_r"]])
+    true_positive = len(df_predict.loc[df_predict["id_l"] == df_predict["id_r"]])
+    false_negative = round(x / 2) - true_positive
 
-with open("duck.txt", "a") as f:
-    f.writelines(
-        "Sample Size: " + str(20000) +
-        "|Links Predicted: " + str(len(df_predict)) +
-        "|Time Taken: " + str(round((time_end - time_start),2)) +
-        "|Precision: " + str(precision) +
-        "|Recall: " + str(recall) +
-        "|Linkage Pairs: " + str(pairs) +
-        "\n"
-    )
+    precision = true_positive / (true_positive + false_positive)
+    recall = true_positive / (true_positive + false_negative)
+
+    with open("/mmfs1/home/seunguk/apptainer/test_files/splink/duck.txt", "a") as f:
+        f.writelines(
+            "Sample Size: " + str(x) +
+            "|Links Predicted: " + str(len(df_predict)) +
+            "|Time Taken: " + str(round((time_end - time_start),2)) +
+            "|Precision: " + str(precision) +
+            "|Recall: " + str(recall) +
+            "|Linkage Pairs: " + str(pairs) +
+            "\n"
+        )
