@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# Necessary downloads
+	apt-get -y update
+	apt-get install -y python3-pip
+	apt-get install -y openjdk-17-jdk
+	apt-get install -y wget
+
+	mkdir spark && cd spark
+	wget https://dlcdn.apache.org/spark/spark-3.4.0/spark-3.4.0-bin-hadoop3.tgz
+	tar -xvf spark-3.4.0-bin-hadoop3.tgz
+	rm spark-3.4.0-bin-hadoop3.tgz
+
+	pip3 install --upgrade pip
+	pip3 install packaging
+	pip3 install paramiko
+	pip3 install pyspark
+	pip3 install splink['all']
+
+	# Additional tools
+	apt-get install -y vim
+	apt-get install -y w3m
+	apt-get install -y w3m-img
+
+	apt-get install -y openssh-client
+	apt-get install -y openssh-server
+
+
+
+%environment
+	export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+	export SPARK_HOME="/spark/spark-3.4.0-bin-hadoop3"
